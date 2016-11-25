@@ -9,20 +9,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var router_1 = require('@angular/router');
+var common_1 = require('@angular/common');
+require('rxjs/add/operator/switchMap');
 var hero_1 = require('./hero');
+var hero_service_1 = require('./hero.service');
 var HeroDetailComponent = (function () {
-    function HeroDetailComponent() {
+    function HeroDetailComponent(_heroService, _route, _location) {
+        this._heroService = _heroService;
+        this._route = _route;
+        this._location = _location;
     }
+    HeroDetailComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._route.params
+            .switchMap(function (params) { return _this._heroService.getHero(+params['id']); })
+            .subscribe(function (hero) { return _this.hero = hero; });
+    };
+    HeroDetailComponent.prototype.goBack = function () {
+        this._location.back();
+    };
+    HeroDetailComponent.prototype.save = function () {
+        var _this = this;
+        this._heroService.update(this.hero).then(function () { return _this.goBack(); });
+    };
     __decorate([
         core_1.Input(), 
         __metadata('design:type', hero_1.Hero)
     ], HeroDetailComponent.prototype, "hero", void 0);
     HeroDetailComponent = __decorate([
         core_1.Component({
+            moduleId: module.id,
             selector: 'my-hero-detail',
-            template: "\n        <div *ngIf=\"hero\">\n            <h2>{{hero.name}} details!</h2>\n            <div><label>id: </label>{{hero.id}}</div>\n            <div>\n            <label>name: </label>\n            <input [(ngModel)]=\"hero.name\" placeholder=\"name\"/>\n            </div>\n        </div>\n    "
+            template: "\n        <div *ngIf=\"hero\">\n            <h2>{{hero.name}} details!</h2>\n            <div>\n                <label>id: </label>{{hero.id}}\n            </div>\n            <div>\n                <label>name: </label>\n                <input [(ngModel)]=\"hero.name\" \n                       placeholder=\"name\"/>\n            </div>\n            <button (click)=\"goBack()\">Back</button>\n            <button (click)=\"save()\">Save</button>\n        </div>\n    ",
+            styleUrls: ['hero-detail.component.css']
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [hero_service_1.HeroService, router_1.ActivatedRoute, common_1.Location])
     ], HeroDetailComponent);
     return HeroDetailComponent;
 }());
