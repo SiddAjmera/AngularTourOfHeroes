@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HeroService } from './hero.service';
 import { Hero } from './hero';
+import { HeroSearchComponent } from './hero-search.component';
 
 @Component({
     moduleId: module.id,
